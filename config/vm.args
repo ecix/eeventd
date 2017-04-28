@@ -1,0 +1,6 @@
+-sname eeventd
+
+-setcookie eeventd_cookie
+
++K true
++A30

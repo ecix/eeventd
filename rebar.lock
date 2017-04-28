@@ -1,0 +1,18 @@
+{"1.1.0",
+[{<<"cowboy">>,{pkg,<<"cowboy">>,<<"1.1.2">>},0},
+ {<<"cowlib">>,{pkg,<<"cowlib">>,<<"1.0.2">>},1},
+ {<<"econfig">>,{pkg,<<"econfig">>,<<"0.7.3">>},0},
+ {<<"eredis">>,{pkg,<<"eredis">>,<<"1.0.8">>},0},
+ {<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.9">>},1},
+ {<<"lager">>,{pkg,<<"lager">>,<<"3.4.2">>},0},
+ {<<"ranch">>,{pkg,<<"ranch">>,<<"1.3.2">>},1}]}.
+[
+{pkg_hash,[
+ {<<"cowboy">>, <<"61AC29EA970389A88ECA5A65601460162D370A70018AFE6F949A29DCA91F3BB0">>},
+ {<<"cowlib">>, <<"9D769A1D062C9C3AC753096F868CA121E2730B9A377DE23DEC0F7E08B1DF84EE">>},
+ {<<"econfig">>, <<"B60F285EFA39C16BDD15A66477390D8E7DFB9A2E60FA5A6C512727E9704BA371">>},
+ {<<"eredis">>, <<"AB4FDA1C4BA7FBE6C19C26C249DC13DA916D762502C4B4FA2DF401A8D51C5364">>},
+ {<<"goldrush">>, <<"F06E5D5F1277DA5C413E84D5A2924174182FB108DABB39D5EC548B27424CD106">>},
+ {<<"lager">>, <<"150B9A17B23AE6D3265CC10DC360747621CF217B7A22B8CDDF03B2909DBF7AA5">>},
+ {<<"ranch">>, <<"E4965A144DC9FBE70E5C077C65E73C57165416A901BD02EA899CFD95AA890986">>}]}
+].
