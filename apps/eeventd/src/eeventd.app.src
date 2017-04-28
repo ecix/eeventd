@@ -1,0 +1,19 @@
+{application, eeventd,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { eeventd_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    lager,
+    econfig,
+    eredis
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
+ ]}.
