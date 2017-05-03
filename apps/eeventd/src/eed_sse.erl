@@ -17,7 +17,7 @@ from_message(Message) ->
 
 
 encode({<<"data">>, Msg}) ->
-    Lines = string:tokens(Msg, "\n"), 
+    Lines = string:tokens(binary:bin_to_list(Msg), "\n"), 
     ["data: " ++ L || L <- Lines];
 
 encode({<<"event">>, Event}) ->

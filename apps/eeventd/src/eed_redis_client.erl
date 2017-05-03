@@ -85,11 +85,28 @@ code_change(_OldVsn, State, _Extra) ->
 %%=========================================================
 %% Queue polling and event fetching
 %%=========================================================
+
+
+%%---------------------------------------------------------
+%% @doc Enqueue redis polling: Fetch data from queue
+%% @end
+%%---------------------------------------------------------
+fetch_queue(Queue) ->
+   gen_server:cast(?SERVER, {fetch_queue, Queue}). 
+
+
+
+%%---------------------------------------------------------
+%% @doc Fetch message from queue. Handle errors and
+%%      timeouts.
+%% @end
+%%---------------------------------------------------------
 do_fetch_queue(Client, Queue) ->
     case eredis:q(Client, ["BRPOP", Queue, 4]) of
         {ok, undefined} -> {error, timeout};
         {ok, [_Queue, Message]} -> {ok, Message}
     end.
+
 
 
 %%---------------------------------------------------------
@@ -100,6 +117,4 @@ dispatch_message(Message) ->
     Sse = eed_sse:from_message(Message),
     eed_broker:publish(Sse).
 
-fetch_queue(Queue) ->
-   gen_server:cast(?SERVER, {fetch_queue, Queue}). 
 
