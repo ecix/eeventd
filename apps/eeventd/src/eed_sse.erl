@@ -3,17 +3,27 @@
 %
 %
 -module(eed_sse).
--export([encode/1, compact/1]).
+-export([encode/1, from_message/1]).
 
 
-encode({data, Msg}) ->
+%%---------------------------------------------------------
+%% @doc Transfrom incoming message from redis into SSE
+%% @end
+%%---------------------------------------------------------
+from_message(Message) ->
+    Data = jsx:encode(maps:get(<<"data">>, Message)),
+    Event = maps:update(<<"data">>, Data, Message),
+    encode(Event). 
+
+
+encode({<<"data">>, Msg}) ->
     Lines = string:tokens(Msg, "\n"), 
     ["data: " ++ L || L <- Lines];
 
-encode({event, Event}) ->
+encode({<<"event">>, Event}) ->
     ["event: " ++ Event];
 
-encode({id, Id}) ->
+encode({<<"id">>, Id}) ->
     ["id: " ++ Id];
 
 encode(Msg) ->
@@ -22,6 +32,5 @@ encode(Msg) ->
 
 compact([]) -> [];
 compact([List|Rest]) ->
-    io:format("List: ~p~n", [List]), 
     List ++ compact(Rest). 
 
