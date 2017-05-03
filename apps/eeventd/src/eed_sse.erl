@@ -18,16 +18,16 @@ from_message(Message) ->
 
 encode({<<"data">>, Msg}) ->
     Lines = string:tokens(binary:bin_to_list(Msg), "\n"), 
-    ["data: " ++ L || L <- Lines];
+    ["data: " ++ L ++ "\n" || L <- Lines];
 
 encode({<<"event">>, Event}) ->
-    ["event: " ++ Event];
+    ["event: " ++ binary:bin_to_list(Event) ++ "\n"];
 
 encode({<<"id">>, Id}) ->
-    ["id: " ++ Id];
+    ["id: " ++ binary:bin_to_list(Id) ++ "\n"];
 
 encode(Msg) ->
-    compact([encode(M) || M <- maps:to_list(Msg)]).
+    compact([encode(M) || M <- maps:to_list(Msg)]) ++ ["\n\n"].
  
 
 compact([]) -> [];

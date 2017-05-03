@@ -3,7 +3,7 @@
 -behaviour(gen_server).
 
 % Api
--export([start_link/0]).
+-export([start_link/0, stop/0]).
 
 % Gen Server
 -export([init/1,
@@ -29,6 +29,13 @@ start_link() ->
 
 
 
+%%---------------------------------------------------------
+%% @doc Shutdown the HTTP server
+%% @end
+%%---------------------------------------------------------
+stop() ->
+    gen_server:stop(?SERVER).
+
 %%=========================================================
 %% Gen Server Callbacks
 %%=========================================================
@@ -42,13 +49,15 @@ init([]) ->
     % TODO Read config
 
     Dispatch = cowboy_router:compile([
-        { '_', [
+        {'_', [
+            {"/", eed_handler_index, []},
+            {"/events", eed_handler_sse, []}
         ]}
     ]),
-    {ok, _} = cowboy:start_http(http, 100, [{port, 7117}], [
+    {ok, Ref} = cowboy:start_http(http, 100, [{port, 7117}], [
         {env, [{dispatch, Dispatch}]}
     ]),
-    {ok, []}.
+    {ok, Ref}.
 
 
 %%---------------------------------------------------------
@@ -83,5 +92,7 @@ code_change(_OldSvn, State, _Extra) -> {ok, State}.
 %% @doc Terminate server
 %% @end
 %%---------------------------------------------------------
-terminate(normal, _State) -> ok.
+terminate(normal, Cowboy) ->
+    io:format("Stopping http server~n"),
+    cowboy:stop_listener(Cowboy).
 
