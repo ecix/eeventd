@@ -39,11 +39,12 @@ stop() ->
 %% Gen Server Callbacks
 %%=========================================================
 init([]) ->
-    {ok, Client} = eredis:start_link(),
-    fetch_queue("ten_dev_eventd_events_notifications"),
+    {ok, Client} = start_redis(), 
+    fetch_queue(get_queue()),
     InitialState = #state{client=Client},
     {ok, InitialState}.
     
+
 %%---------------------------------------------------------
 %% @doc Nothing to call
 %% @end
@@ -116,5 +117,33 @@ do_fetch_queue(Client, Queue) ->
 dispatch_message(Message) ->
     Sse = eed_sse:from_message(Message),
     eed_broker:publish(Sse).
+
+
+
+
+
+%%---------------------------------------------------------
+%% @doc Get redis connection 
+%% @end
+%%---------------------------------------------------------
+start_redis() ->
+    % Get configuration
+    Server = econfig:get_value(eeventd, "eventd", "redis_server"),
+    [Host, ConfigPort] = string:tokens(Server, ":"),
+    {Port, _} = string:to_integer(ConfigPort),
+    Database = econfig:get_integer(eeventd, "eventd", "redis_database"),
+   
+    % Open redis connection
+    eredis:start_link(Host, Port, Database).
+
+
+%%---------------------------------------------------------
+%% @doc Get polling queue from config
+%% @end
+%%---------------------------------------------------------
+get_queue() ->
+    Queue = econfig:get_value(eeventd, "eventd", "redis_queue"),
+    Stream = econfig:get_value(eeventd, "eventd", "default_stream"),
+    Queue ++ "_" ++ Stream.
 
 
