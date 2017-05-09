@@ -14,8 +14,11 @@
 %% API
 %%====================================================================
 
-start(_StartType, _StartArgs) ->
+start(_StartType, Args) ->
+    io:format("Starting up with: ~p~n", [Args]),
     eed_broker_sup:start_link(),
+    eed_redis_client:start_link(),
+    eed_http_serv:start_link(),
     eeventd_sup:start_link().
 
 %%--------------------------------------------------------------------
