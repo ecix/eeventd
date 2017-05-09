@@ -59,9 +59,7 @@ handle_call(_Msg, _From, State) -> {noreply, State}.
 handle_cast({fetch_queue, Queue}, State) -> 
     case do_fetch_queue(State#state.client, Queue) of
         {ok, Payload} ->
-            % Decode payload and dispatch event
-            Message = jsx:decode(Payload, [return_maps]),
-            dispatch_message(Message);
+            dispatch_message(Payload);
         {error, timeout} -> 
             % Do nothing
             ok

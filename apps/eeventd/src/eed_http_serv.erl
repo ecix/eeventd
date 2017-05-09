@@ -46,8 +46,9 @@ stop() ->
 %% @end
 %%---------------------------------------------------------
 init([]) ->
-    % TODO Read config
+    % Get server setup from config
     StreamUri = get_stream_uri(), 
+    ListenPort = get_listen_port(),
 
     Dispatch = cowboy_router:compile([
         {'_', [
@@ -55,7 +56,7 @@ init([]) ->
             {StreamUri, eed_handler_sse, []}
         ]}
     ]),
-    {ok, Ref} = cowboy:start_http(http, 100, [{port, 7117}], [
+    {ok, Ref} = cowboy:start_http(http, 100, [{port, ListenPort}], [
         {env, [{dispatch, Dispatch}]}
     ]),
     {ok, Ref}.
@@ -98,7 +99,10 @@ terminate(normal, Cowboy) ->
     cowboy:stop_listener(Cowboy).
 
 
-
+%%---------------------------------------------------------
+%% @doc Provide the sse stream under the following path.
+%% @end
+%%---------------------------------------------------------
 get_stream_uri() ->
     Config = econfig:get_value(eeventd, "eventd", "stream_url"),
     {ok, {_Protocol,
@@ -109,3 +113,14 @@ get_stream_uri() ->
           _Query}} = http_uri:parse(Config),
     Path.
 
+
+
+%%---------------------------------------------------------
+%% @doc Get listening port from listen configuration
+%% @end
+%%---------------------------------------------------------
+get_listen_port() ->
+    Addr = econfig:get_value(eeventd, "eventd", "listen"),
+    [_, PortStr] = string:tokens(Addr, ":"),
+    {Port, []} = string:to_integer(PortStr),
+    Port.

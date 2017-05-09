@@ -11,8 +11,9 @@
 %% @end
 %%---------------------------------------------------------
 from_message(Message) ->
-    Data = jsx:encode(maps:get(<<"data">>, Message)),
-    Event = maps:update(<<"data">>, Data, Message),
+    % Make message event
+    Event = #{<<"event">> => <<"message">>,
+              <<"data">> => Message},
     encode(Event). 
 
 
@@ -27,7 +28,7 @@ encode({<<"id">>, Id}) ->
     ["id: " ++ binary:bin_to_list(Id) ++ "\n"];
 
 encode(Msg) ->
-    compact([encode(M) || M <- maps:to_list(Msg)]) ++ ["\n\n"].
+    compact([encode(M) || M <- maps:to_list(Msg)]) ++ ["\n"].
  
 
 compact([]) -> [];
