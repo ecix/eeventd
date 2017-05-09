@@ -47,11 +47,12 @@ stop() ->
 %%---------------------------------------------------------
 init([]) ->
     % TODO Read config
+    StreamUri = get_stream_uri(), 
 
     Dispatch = cowboy_router:compile([
         {'_', [
             {"/", eed_handler_index, []},
-            {"/events", eed_handler_sse, []}
+            {StreamUri, eed_handler_sse, []}
         ]}
     ]),
     {ok, Ref} = cowboy:start_http(http, 100, [{port, 7117}], [
@@ -95,4 +96,16 @@ code_change(_OldSvn, State, _Extra) -> {ok, State}.
 terminate(normal, Cowboy) ->
     io:format("Stopping http server~n"),
     cowboy:stop_listener(Cowboy).
+
+
+
+get_stream_uri() ->
+    Config = econfig:get_value(eeventd, "eventd", "stream_url"),
+    {ok, {_Protocol,
+          _UserInfo,
+          _Host,
+          _Port,
+          Path,
+          _Query}} = http_uri:parse(Config),
+    Path.
 
