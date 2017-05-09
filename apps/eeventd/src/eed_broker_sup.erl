@@ -28,6 +28,6 @@ init([]) ->
                   start => {eed_broker, start_link, []},
                   type => worker},
                   
-    {ok, { {one_for_all, 10, 600}, [ChildSpec]} }.
+    {ok, { {one_for_all, 100, 600}, [ChildSpec]} }.
 
 

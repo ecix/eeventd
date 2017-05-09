@@ -23,7 +23,7 @@ start(_StartType, _Args) ->
 
     % Startup application
     eed_broker_sup:start_link(),
-    eed_redis_client:start_link(),
+    eed_redis_client_sup:start_link(),
     eed_http_serv:start_link(),
     eeventd_sup:start_link().
 
