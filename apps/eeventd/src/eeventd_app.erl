@@ -41,14 +41,14 @@ stop(_State) ->
 %% @doc Get config filename, passed via init:get_argument
 %%      or via os:get_env.
 %%
-%% get_argument relies on -ten-config passed at startup,
-%% getenv uses the TEN_CONFIG environment variable.
+%% get_argument relies on -app-config passed at startup,
+%% getenv uses the APP_CONFIG environment variable.
 %% 
 %% This raises an error if neither was defined.
 %%---------------------------------------------------------
 get_config_filename() ->
-    EnvFilename = os:getenv("TEN_CONFIG"),
-    ArgsFilename = init:get_argument('ten-config'),
+    EnvFilename = os:getenv("APP_CONFIG"),
+    ArgsFilename = init:get_argument('app-config'),
     % Try cli argument, fall back to ENV
     Filename = case ArgsFilename of
             error -> EnvFilename;
@@ -56,7 +56,7 @@ get_config_filename() ->
         end,
     % Okay we have our two options: Filename or false
     case Filename of
-        false -> erlang:exit(ten_config_missing);
+        false -> erlang:exit(app_config_missing);
         FEnv -> FEnv
     end.
 
