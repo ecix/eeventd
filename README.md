@@ -38,7 +38,7 @@ application, e.g. a django project.
     listen = localhost:2323
 
 
-### Running
+## Running
     
 In development mode using rebar, pass the 
 configuration file via the `APP_CONFIG` environment variable:
