@@ -60,8 +60,8 @@ handle_cast({fetch_queue, Queue}, State) ->
     case do_fetch_queue(State#state.client, Queue) of
         {ok, Payload} ->
             dispatch_message(Payload);
-        {error, timeout} -> 
-            % Do nothing
+        {error, _Reason} -> 
+            % Do nothing, keep calm an poll on.
             ok
     end,
 
@@ -97,13 +97,22 @@ fetch_queue(Queue) ->
 
 %%---------------------------------------------------------
 %% @doc Fetch message from queue. Handle errors and
-%%      timeouts.
+%%      timeouts. Add some sleep timeout in case something
+%%      goes awry.
 %% @end
 %%---------------------------------------------------------
 do_fetch_queue(Client, Queue) ->
     case eredis:q(Client, ["BRPOP", Queue, 4]) of
         {ok, undefined} -> {error, timeout};
-        {ok, [_Queue, Message]} -> {ok, Message}
+        {ok, [_Queue, Message]} -> {ok, Message};
+        {error, no_connection} ->
+            io:format("Lost redis connection~n"),
+            timer:sleep(1500),
+            {error, no_connection};
+        {error, Reason} -> 
+            io:format("Redis error: ~p~n", [Reason]),
+            timer:sleep(500),
+            {error, Reason}
     end.
 
 
