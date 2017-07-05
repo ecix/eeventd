@@ -152,7 +152,7 @@ terminate(normal, _State) ->
     ok.
 
 %%---------------------------------------------------------
-%% @doc Subscribe to broker 
+%% @doc Handle code change 
 %% @end
 %%---------------------------------------------------------
 code_change(_OldSvn, State, _Extra) ->
@@ -197,7 +197,7 @@ do_unsubscribe_subscription(Subscription, Listeners) ->
 
 
 %%---------------------------------------------------------
-%% @doc Leave broker with subscription
+%% @doc Publish an event to all listeners
 %% @end
 %%---------------------------------------------------------
 do_publish(Event, Listeners) ->
